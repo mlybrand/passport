@@ -29,6 +29,11 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
     app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
 
     app.get('/auth/facebook/callback',
@@ -37,10 +42,13 @@ module.exports = function (app, passport) {
             failureRedirect: '/'
         }));
 
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
-    });
+    app.get('/auth/twitter', passport.authenticate('twitter'));
+
+    app.get('/auth/twitter/callback',
+        passport.authenticate('twitter', {
+            successRedirect: '/profile',
+            failureRedirect: '/'
+        }));
 
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {
